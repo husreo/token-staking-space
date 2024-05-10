@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "DINPro";
+  src: url("../../../app/fonts/DINPro/DINPRO.ttf") format("truetype");
+}
+@font-face {
+  font-family: "aeonikMono";
+  src: url("../../../app/fonts/aeonikMono/AeonikMono-Regular.otf")
+    format("truetype");
+}

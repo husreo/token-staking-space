@@ -1,0 +1,15 @@
+.wallet_multi_button_base {
+  @apply w-full;
+}
+
+.wallet_multi_button_base div {
+  @apply w-full;
+}
+
+.wallet_multi_button_base button {
+  @apply w-full text-black bg-[#00ffc2] rounded-xl transition ease-in-out delay-150 hover:bg-white duration-300;
+}
+
+.wallet_multi_button_base:hover button:hover {
+  @apply bg-white duration-150;
+}

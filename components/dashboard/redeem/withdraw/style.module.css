@@ -1,0 +1,38 @@
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;
+  width: 100%; /* Full-width */
+  height: 4px; /* Specified height */
+  appearance: none;
+  /* background: linear-gradient(
+    91deg,
+    #04c899 50.56%,
+    #3fd8b3 66.25%,
+    #009974 90.24%
+  ); */
+  background: linear-gradient(
+    to right,
+    #82cfd0 0%,
+    #82cfd0 50%,
+    #fff 50%,
+    #fff 100%
+  );
+  outline: none; /* Remove outline */
+  margin-bottom: 12px;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 12px; /* Set a specific slider handle width */
+  height: 12px; /* Slider handle height */
+  background: #00ffc2; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+  border-radius: 100%;
+}

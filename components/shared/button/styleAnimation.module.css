@@ -1,0 +1,77 @@
+/* Variants */
+.btn__variants__default::before {
+  @apply bg-fcon text-black;
+}
+
+.btn__variants__default:disabled {
+  @apply bg-fcon;
+}
+
+.btn__variants__muted::before {
+  @apply bg-white text-black hover:bg-white hover:text-black;
+}
+.btn__variants__muted {
+  @apply border border-white/[0.12];
+}
+/* :global(.dark) .btn__variants__muted {
+  @apply border border-white/50;
+} */
+
+.btn__variants__muted:disabled {
+  @apply border-white/50 hover:bg-transparent text-gray-600;
+}
+
+.btn__variants__outlined::before {
+  @apply  hover:bg-gray2 hover:text-black;
+}
+.btn__variants__outlined {
+  @apply bg-transparent text-white border border-white/[0.12];
+}
+
+.btn__variants__outlined:disabled {
+  @apply border-white/50 hover:bg-transparent hover:text-white;
+}
+
+.btn__variants__outlined:disabled::before {
+  @apply  hover:bg-transparent hover:text-inherit;
+}
+
+.btn__variants__error::before {
+  @apply bg-red-500;
+}
+.btn__variants__error:disabled {
+  @apply bg-red-500/50;
+}
+
+.btn__variants__transparent::before {
+  @apply bg-transparent text-white;
+}
+
+.btn__variants__secondary::before {
+  @apply bg-gray7 text-black;
+}
+
+.btn__variants__secondary {
+}
+
+.btn__variants__cancel::before {
+  @apply bg-white/[0.05] !text-white hover:!text-white;
+}
+
+.btn__variants__cancel {
+  @apply bg-white/[0.05] text-white;
+}
+
+.btn__variants__cancel:hover > div > div {
+  @apply bg-white/[0.05] !text-white;
+}
+
+.btn__variants__gradient::before {
+  @apply bg-fcon-gradient text-black;
+}
+.btn__variants__green::before {
+  @apply bg-[#1FCAA1] text-white;
+}
+.btn__variants__green {
+  @apply rounded-[63px];
+}

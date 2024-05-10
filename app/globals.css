@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  @apply font-aeonikPro;
+  background: black;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  -webkit-border-radius: 1ex;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--background);
+}
+
+html {
+  scroll-snap-type: y mandatory;
+}
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.glow-text {
+  position: relative;
+}
+
+.glow-text::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: -1;
+  background: radial-gradient(circle, #00ff00 0%, transparent 80%);
+}
+
+@keyframes my-rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.spinning {
+  animation: my-rotate 4s linear infinite;
+}
+
+.Toastify__toast-container {
+  width: fit-content;
+  max-width: 480px;
+}
+.Toastify__toast {
+  padding: 0;
+  background: transparent;
+}
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.Toastify__toast-body > div {
+  height: 100%;
+}
+.Toastify__close-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+input:-internal-autofill-selected {
+  background-color: transparent;
+}
+.react-datepicker-popper {
+  z-index: 30 !important;
+}
