@@ -1,93 +1,100 @@
-<a href="https://precedent.dev">
-  <img alt="Precedent – Building blocks for your Next project" src="https://precedent.dev/opengraph-image">
-  <h1 align="center">Precedent</h1>
-</a>
+# Sol & FCON-Staking-Contract
 
-<p align="center">
-  Building blocks for your Next project
-</p>
+## Install Dependencies
 
-<p align="center">
-  <a href="https://twitter.com/steventey">
-    <img src="https://img.shields.io/twitter/follow/steventey?style=flat&label=steventey&logo=twitter&color=0bf&logoColor=fff" alt="Steven Tey Twitter follower count" />
-  </a>
-  <a href="https://github.com/steven-tey/precedent">
-    <img src="https://img.shields.io/github/stars/steven-tey/precedent?label=steven-tey%2Fprecedent" alt="Precedent repo star count" />
-  </a>
-</p>
+- Install `node` and `yarn`
+- Install `script` as global command
+- Confirm the solana wallet preparation. ex: `id.json`
 
-<p align="center">
-  <a href="#introduction"><strong>Introduction</strong></a> ·
-  <a href="#one-click-deploy"><strong>One-click Deploy</strong></a> ·
-  <a href="#tech-stack--features"><strong>Tech Stack + Features</strong></a> ·
-  <a href="#author"><strong>Author</strong></a>
-</p>
-<br/>
+## Usage
 
-## Introduction
+- Main script source for all functionality is here: `/lib/script.ts`
+- Program account types are declared here: `/lib/types.ts`
 
-Precedent is an opinionated collection of components, hooks, and utilities for your Next.js project.
+Able to test the script functions working in this way.
 
-## One-click Deploy
+- Change commands properly in the main functions of the `script.ts` file to call the other functions
+- Run `yarn script` with parameters
 
-You can deploy this template to Vercel with the button below:
+# Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsteven-tey%2Fprecedent&project-name=precedent&repository-name=precedent&demo-title=Precedent&demo-description=An%20opinionated%20collection%20of%20components%2C%20hooks%2C%20and%20utilities%20for%20your%20Next%20project.&demo-url=https%3A%2F%2Fprecedent.dev&demo-image=https%3A%2F%2Fprecedent.dev%2Fopengraph-image&env=GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,NEXTAUTH_SECRET&envDescription=How%20to%20get%20these%20env%20variables%3A&envLink=https%3A%2F%2Fgithub.com%2Fsteven-tey%2Fprecedent%2Fblob%2Fmain%2F.env.example&stores=%5B%7B"type"%3A"postgres"%7D%5D)
+## How to deploy this program?
 
-You can also clone & create this repo locally with the following command:
+First of all, you have to git clone in your PC.
+In the folder `Staking-Contract`, in the terminal
 
-```bash
-npx create-next-app precedent --example "https://github.com/steven-tey/precedent"
+1. `yarn`
+
+2. `anchor build`
+   In the last sentence you can see:
+
+```
+To deploy this program:
+  $ solana program deploy ./target/deploy/sol_token_staking.so
+The program address will default to this keypair (override with --program-id):
+  ./id.json
 ```
 
-## Tech Stack + Features
+3. `solana-keygen pubkey ./target/deploy/sol_token_staking.json`
+4. You can get the pubkey of the `program ID : ex."GY...YYG"`
+5. Please add this pubkey to the lib.rs
+   `declare_id!("GY...YYG");`
+6. Please add this pubkey to the Anchor.toml
+   `sol_token_staking = "GY...YYG"`
+7. `anchor build` again
+8. `solana program deploy ./target/deploy/sol_token_staking.so`
 
-https://user-images.githubusercontent.com/28986134/212368288-12f41e37-aa8c-4e0a-a542-cf6d23410a65.mp4
+<p align = "center">
+Then, you can enjoy this program 
+</p>
+</br>
 
-### Frameworks
+## How to use?
 
-- [Next.js](https://nextjs.org/) – React framework for building performant apps with the best developer experience
-- [Auth.js](https://authjs.dev/) – Handle user authentication with ease with providers like Google, Twitter, GitHub, etc.
-- [Prisma](https://www.prisma.io/) – Typescript-first ORM for Node.js
+### A Project Owner
 
-### Platforms
+First of all, open the directory and `yarn`
 
-- [Vercel](https://vercel.com/) – Easily preview & deploy changes with git
-- [Vercel Postgres](https://vercel.com/postgres) – Serverless Postgres at the Edge
+#### Initialize project
 
-### UI
+```js
+   yarn script init
+```
 
-- [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework for rapid UI development
-- [Radix](https://www.radix-ui.com/) – Primitives like modal, popover, etc. to build a stellar user experience
-- [Framer Motion](https://framer.com/motion) – Motion library for React to animate components with ease
-- [Lucide](https://lucide.dev/) – Beautifully simple, pixel-perfect icons
-- [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) – Optimize custom fonts and remove external network requests for improved performance
-- [`ImageResponse`](https://beta.nextjs.org/docs/api-reference/image-response) – Generate dynamic Open Graph images at the edge
-- [`react-wrap-balancer`](https://github.com/shuding/react-wrap-balancer) – Simple React component that makes titles more readable
+### A Player
 
-### Hooks and Utilities
+#### Stake Sol & Fcon
 
-- `useIntersectionObserver` –  React hook to observe when an element enters or leaves the viewport
-- `useLocalStorage` – Persist data in the browser's local storage
-- `useScroll` – React hook to observe scroll position ([example](https://github.com/steven-tey/precedent/blob/main/components/layout/navbar.tsx#L12))
-- `nFormatter` – Format numbers with suffixes like `1.2k` or `1.2M`
-- `capitalize` – Capitalize the first letter of a string
-- `truncate` – Truncate a string to a specified length
-- [`use-debounce`](https://www.npmjs.com/package/use-debounce) – Debounce a function call / state update
+```js
+   yarn script lock
+   yarn script locksol
+```
+#### Claim Sol & FCON
 
-### Code Quality
+```js
+   yarn script claim -o 1
+   yarn script claim -o 0
+```
 
-- [TypeScript](https://www.typescriptlang.org/) – Static type checker for end-to-end typesafety
-- [Prettier](https://prettier.io/) – Opinionated code formatter for consistent code style
-- [ESLint](https://eslint.org/) – Pluggable linter for Next.js and TypeScript
+#### Unstake Sol & Fcon
 
-### Miscellaneous
+```js
+   yarn script unlock
+   yarn script unlocksol
+```
 
-- [Vercel Analytics](https://vercel.com/analytics) – Track unique visitors, pageviews, and more in a privacy-friendly way
+#### Get user status
 
-## Author
+```js
+   yarn script user-status -a <USER_ADDRESS>
+```
 
-- Steven Tey ([@steventey](https://twitter.com/steventey))
+Get status of user <USER_ADDRESS>.
 
+#### Get all users
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/spacefalcon-io/Spacefalcon.com/tree/feat/auth)
+```js
+   yarn script get-users
+```
+
+Get all users stake info

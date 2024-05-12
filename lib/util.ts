@@ -5,6 +5,11 @@ import {
     PublicKey,
 } from "@solana/web3.js";
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+    Metadata,
+    PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID,
+} from "@metaplex-foundation/mpl-token-metadata";
+import fetch from 'node-fetch';
 
 export const METAPLEX = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
 export const MPL_DEFAULT_RULE_SET = new PublicKey(
@@ -97,7 +102,81 @@ const getATokenAccountsNeedCreate = async (
     };
 }
 
+/** Get metaplex mint metadata account address */
+const getMetadata = async (mint: PublicKey): Promise<PublicKey> => {
+    return (
+        await PublicKey.findProgramAddress([Buffer.from('metadata'), METAPLEX.toBuffer(), mint.toBuffer()], METAPLEX)
+    )[0];
+};
+
+const getMasterEdition = async (
+    mint: anchor.web3.PublicKey
+): Promise<anchor.web3.PublicKey> => {
+    return (
+        await anchor.web3.PublicKey.findProgramAddress(
+            [
+                Buffer.from("metadata"),
+                METAPLEX.toBuffer(),
+                mint.toBuffer(),
+                Buffer.from("edition"),
+            ],
+            METAPLEX
+        )
+    )[0];
+};
+
+const getTraitInfo = async (
+    mint: anchor.web3.PublicKey,
+    connection: Connection
+) => {
+
+    const [metadataPDA] = anchor.web3.PublicKey.findProgramAddressSync(
+        [
+            Buffer.from("metadata"),
+            TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+            mint.toBuffer(),
+        ],
+        TOKEN_METADATA_PROGRAM_ID
+    );
+
+    const Metaplex_Metadata = await Metadata.fromAccountAddress(connection, metadataPDA);
+
+    const metadataResponse = await fetch(Metaplex_Metadata.data.uri);
+    if (!metadataResponse.ok) {
+        throw new Error('Failed to fetch metadata');
+    }
+
+    const metadata: any = await metadataResponse.json();
+
+    const isHolyOrHellfire =
+        metadata?.attributes[9]?.value === "Holy" || metadata?.attributes[9]?.value === "Hellfire";
+    // const isHolyOrHellfire =
+    //     metadata?.attributes[2]?.value === "1235" || metadata?.attributes[2]?.value === "1235";
+
+    return !!isHolyOrHellfire;
+};
+
+
+export function findTokenRecordPda(
+    mint: PublicKey,
+    token: PublicKey
+): PublicKey {
+    return PublicKey.findProgramAddressSync(
+        [
+            Buffer.from("metadata"),
+            METAPLEX.toBuffer(),
+            mint.toBuffer(),
+            Buffer.from("token_record"),
+            token.toBuffer(),
+        ],
+        METAPLEX
+    )[0];
+}
+
 export {
     getAssociatedTokenAccount,
     getATokenAccountsNeedCreate,
+    getMetadata,
+    getMasterEdition,
+    getTraitInfo
 }

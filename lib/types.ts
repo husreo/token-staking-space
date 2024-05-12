@@ -3,14 +3,16 @@ import { PublicKey } from '@solana/web3.js'
 
 export interface GlobalPool {
     admin: PublicKey,
-    totalTokenStaked: anchor.BN,
-    totalSolStaked: anchor.BN
+    totalStaked: number
 }
 
 export interface UserPool {
     user: PublicKey,
-    totalTokenStaked: anchor.BN,
-    stakeTokenDate: anchor.BN,
-    tokenReward: anchor.BN
+    stakeData: StakeInfo[],
 }
 
+export interface StakeInfo {
+    mint: PublicKey,
+    time: anchor.BN,
+    halo: Boolean
+}
