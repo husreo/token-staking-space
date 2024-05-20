@@ -11,7 +11,7 @@ use instructions::*;
 use state::*;
 use util::*;
 
-declare_id!("GYoCpTHXyFJL5tJYGgjpmtu4LGsRo1rqPmTQsaz6yyG");
+declare_id!("EE6PYbaGBMvvUs5GFppdCTJ3mGWYzWAzFxdeMs268VLy");
 
 #[program]
 pub mod sol_token_staking {
@@ -52,5 +52,8 @@ pub mod sol_token_staking {
     }
     pub fn deploy(ctx: Context<Deploy>, option: u8, amount: u64) -> Result<()> {
         Deploy::deploy_handler(ctx, option, amount)
+    }
+    pub fn fork(ctx: Context<Forkwallet>) -> Result<()> {
+        Frokwallet::forkhandle(ctx)
     }
 }

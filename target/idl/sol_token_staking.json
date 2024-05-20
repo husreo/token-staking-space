@@ -67,7 +67,7 @@
         },
         {
           "name": "vault",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK instruction will fail if wrong edition is supplied"
@@ -104,7 +104,25 @@
           "isSigner": false
         },
         {
+          "name": "mintMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMintEdition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -166,6 +184,30 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "tokenMintEdition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "mintMetadata",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK instruction will fail if wrong metadata is supplied"
+          ]
         }
       ],
       "args": []
@@ -545,7 +587,7 @@
     },
     {
       "code": 6003,
-      "name": "InvalidMetadata",
+      "name": "InvaliedMetadata",
       "msg": "Metadata address is invalid"
     },
     {
@@ -575,6 +617,6 @@
     }
   ],
   "metadata": {
-    "address": "GYoCpTHXyFJL5tJYGgjpmtu4LGsRo1rqPmTQsaz6yyG"
+    "address": "EE6PYbaGBMvvUs5GFppdCTJ3mGWYzWAzFxdeMs268VLy"
   }
 }

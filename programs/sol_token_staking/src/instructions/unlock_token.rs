@@ -1,5 +1,7 @@
 use crate::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
+use mpl_token_metadata::instruction::thaw_delegated_account;
+use solana_program::program::invoke_signed;
+use anchor_spl::token::{ Mint, Token, TokenAccount, Revoke, self };
 
 #[derive(Accounts)]
 pub struct UnlockToken<'info> {
@@ -45,8 +47,16 @@ pub struct UnlockToken<'info> {
     )]
     pub elmnt_vault: Box<Account<'info, TokenAccount>>,
     pub system_program: Program<'info, System>,
+    token_program: Program<'info, Token>,
+    /// CHECK intstruction will fail if wrong program is supplied
+    token_metadata_program: AccountInfo<'info>,
+    /// CHECK intstruction will fail if wrong program is supplied
 
-    pub token_program: Program<'info, Token>
+    pub token_mint_edition: AccountInfo<'info>,
+
+    /// CHECK instruction will fail if wrong metadata is supplied
+    #[account(mut)]
+    mint_metadata: UncheckedAccount<'info>,
 }
  
 impl UnlockToken<'_> {
@@ -55,6 +65,7 @@ impl UnlockToken<'_> {
 
         let global_pool = &mut ctx.accounts.global_pool;
         // require!(user_pool.total_token_staked == 0, StakingError::InvalidCollection);
+        let user_escrow = ctx.accounts.elmnt_vault.key();
 
         let _vault_bump = *ctx.bumps.get("vault").unwrap();
         //  Update reward
@@ -65,14 +76,30 @@ impl UnlockToken<'_> {
             user_pool.token_reward += lock_duration / DAY_SECONDS * TOKEN_LOW_RATE;
         }
         msg!("reward =======>{}", user_pool.token_reward);
-        token_transfer_with_signer(
-            ctx.accounts.elmnt_vault.to_account_info(),
-            ctx.accounts.vault.to_account_info(),
-            ctx.accounts.token_account.to_account_info(),
-            ctx.accounts.token_program.to_account_info(),
+        invoke_signed(
+            &thaw_delegated_account(
+                ctx.accounts.token_metadata_program.key(),
+                user_escrow,
+                ctx.accounts.token_account.key(),
+                ctx.accounts.token_mint_edition.key(),
+                ctx.accounts.token_mint.key(),
+            ),
+            &[
+                ctx.accounts.elmnt_vault.to_account_info(),
+                ctx.accounts.token_account.to_account_info(),
+                ctx.accounts.token_mint_edition.to_account_info(),
+                ctx.accounts.token_mint.to_account_info(),
+            ],
             &[&[VAULT_AUTHORITY_SEED.as_ref(), &[_vault_bump]]],
-            (user_pool.total_token_staked + user_pool.token_reward)
         )?;
+
+        let cpi_accounts = Revoke {
+            source: ctx.accounts.token_account.to_account_info(),
+            authority: ctx.accounts.user.to_account_info(),
+        };
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+        token::revoke(cpi_context)?;
 
         global_pool.total_token_staked -= user_pool.total_token_staked;
         user_pool.remove_token_stake_info();

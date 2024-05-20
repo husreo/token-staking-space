@@ -10,8 +10,8 @@ import {
 import { ELMNT_DECIMAL } from './constant';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { METAPLEX, MPL_DEFAULT_RULE_SET, findTokenRecordPda, getATokenAccountsNeedCreate, getAssociatedTokenAccount, getMasterEdition, getMetadata, getTraitInfo } from './util';
 
-import { getAssociatedTokenAccount } from './util';
 import { GLOBAL_AUTHORITY_SEED, ELMNT_ADDRESS, USER_POOL_SEED, VAULT_AUTHORITY_SEED } from './constant';
 import { BN } from 'bn.js';
 
@@ -20,7 +20,7 @@ export const createInitializeTx = async (
     program: anchor.Program,
 ) => {
     const [globalPool, bump] = PublicKey.findProgramAddressSync(
-        [Buffer.from(GLOBAL_AUTHORITY_SEED)],
+        [Buffer.from(GLOBAL_AUTHORITY_SEED)], 
         program.programId);
     console.log("globalPool: ", globalPool.toBase58());
 
@@ -64,12 +64,13 @@ export const createLockTokenTx = async (
     userAddress: PublicKey,
     program: anchor.Program,
     connection: Connection,
-    amount: number
+    amount: number,
+    tokenMint: PublicKey,
 ) => {
     const [globalPool, bump] = PublicKey.findProgramAddressSync(
         [Buffer.from(GLOBAL_AUTHORITY_SEED)],
         program.programId);
-    console.log("globalPool: ", globalPool.toBase58());
+    console.log("globalPool:========> ", globalPool.toBase58());
 
     const [vault, vault_bump] = PublicKey.findProgramAddressSync(
         [Buffer.from(VAULT_AUTHORITY_SEED)],
@@ -85,17 +86,18 @@ export const createLockTokenTx = async (
     console.log("user address", userAddress);
     
     console.log("tokenAccount: ", tokenAccount.toBase58());
-
+    const tokenEdition = await getMasterEdition(tokenMint);
+    const mintMetadata = await getMetadata(tokenMint);
     let elmntVault = await getAssociatedTokenAccount(vault, ELMNT_ADDRESS);
     
     const tx = new Transaction();
 
-    let poolAccount = await connection.getAccountInfo(userPool);
-    if (poolAccount === null || poolAccount.data === null) {
-        console.log("init User Pool");
-        const tx_initUserPool = await createInitUserTx(userAddress, program);
-        tx.add(tx_initUserPool);
-    }
+    // let poolAccount = await connection.getAccountInfo(userPool);
+    // if (poolAccount === null || poolAccount.data === null) {
+    //     console.log("init User Pool");
+    //     const tx_initUserPool = await createInitUserTx(userAddress, program);
+    //     tx.add(tx_initUserPool);
+    // }
 
     const txId = await program.methods
         .lockToken(new BN(amount))
@@ -106,7 +108,10 @@ export const createLockTokenTx = async (
             userPool,
             user: userAddress,
             tokenAccount,
+            tokenMetadataProgram: METAPLEX,
+            tokenMintEdition: tokenEdition,
             tokenMint: ELMNT_ADDRESS,
+            mintMetadata,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId
         })
@@ -158,6 +163,7 @@ export const createLockSolTx = async (
 export const createUnLockTokenTx = async (
     userAddress: PublicKey,
     program: anchor.Program,
+    nftMint: PublicKey
 ) => {
     const [globalPool, bump] = PublicKey.findProgramAddressSync(
         [Buffer.from(GLOBAL_AUTHORITY_SEED)],
@@ -178,7 +184,8 @@ export const createUnLockTokenTx = async (
     console.log("user address", userAddress);
     
     console.log("tokenAccount: ", tokenAccount.toBase58());
-
+    const tokenMintEdition = await getMasterEdition(nftMint);
+    const mintMetadata = await getMetadata(nftMint);
     let elmntVault = await getAssociatedTokenAccount(vault, ELMNT_ADDRESS);
     
     const tx = new Transaction();
@@ -188,10 +195,13 @@ export const createUnLockTokenTx = async (
         .accounts({
             globalPool,
             vault,
+            tokenMintEdition,
+            mintMetadata,
             elmntVault,
             userPool,
             user: userAddress,
             tokenAccount,
+            tokenMetadataProgram: METAPLEX,
             tokenMint: ELMNT_ADDRESS,
             tokenProgram: TOKEN_PROGRAM_ID,
             systemProgram: SystemProgram.programId

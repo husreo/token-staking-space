@@ -102,7 +102,7 @@ export const initializeUserPool = async () => {
 export const lockToken = async (
 ) => {
     try {
-        const tx = await createLockTokenTx(payer.publicKey, program, solConnection, 2 * ELMNT_DECIMAL);
+        const tx = await createLockTokenTx(payer.publicKey, program, solConnection, 4 * ELMNT_DECIMAL, new PublicKey("4EKbguCsFW3TfpWs8xDnUKFLZheB3rnoRViApjxCicoq"));
         const txId = await provider.sendAndConfirm(tx, [], {
             commitment: "confirmed",
         });
@@ -138,7 +138,7 @@ export const lockSol = async (
 export const unlockToken = async (
 ) => {
     try {
-        const tx = await createUnLockTokenTx(payer.publicKey, program);
+        const tx = await createUnLockTokenTx(payer.publicKey, program, new PublicKey("5CY4inXAWEKDENqJ5ZLNaTYX8gzjHZNXimuj7VmFmVi6"));
 
         const txId = await provider.sendAndConfirm(tx, [], {
             commitment: "confirmed",

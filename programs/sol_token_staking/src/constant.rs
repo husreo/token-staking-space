@@ -8,7 +8,7 @@ pub const USER_POOL_SEED: &str = "user-pool-facon-seed";
 pub const DAY_SECONDS: u64 =  60 * 60 * 24;
 
 // pub const ELMNT_ADDRESS: &str = "5CY4inXAWEKDENqJ5ZLNaTYX8gzjHZNXimuj7VmFmVi6";
-pub const ELMNT_ADDRESS: &str = "5CY4inXAWEKDENqJ5ZLNaTYX8gzjHZNXimuj7VmFmVi6";
+pub const ELMNT_ADDRESS: &str = "4EKbguCsFW3TfpWs8xDnUKFLZheB3rnoRViApjxCicoq";
 
 pub const ELMNT_DECIMAL: u64 = 1000000;
 

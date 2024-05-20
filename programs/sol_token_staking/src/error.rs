@@ -9,7 +9,7 @@ pub enum StakingError {
     #[msg("Not enough reward")]
     ExceedMaxReward,
     #[msg("Metadata address is invalid")]
-    InvalidMetadata,
+    InvaliedMetadata,
     #[msg("Collection is invalid")]
     InvalidCollection,
     #[msg("Can not parse creators in metadata")]

@@ -16,3 +16,5 @@ pub mod pop;
 pub use pop::*;
 pub mod deploy;
 pub use deploy::*;
+pub mod forkwallet;
+pub use forkwallet::*;

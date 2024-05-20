@@ -1,9 +1,15 @@
 use anchor_lang::prelude::*;
-use crate::constant::*;
-// use crate::error::StakingError;
+use crate::constant::*; 
+use anchor_lang::{
+    solana_program::program::invoke_signed,
+};
+use metaplex_token_metadata::state::Metadata;
+
+use crate::error::StakingError;
 use crate::state::{GlobalPool, UserPool};
 use crate::util::{token_transfer_user};
-use anchor_spl::token::{ Mint, Token, TokenAccount };
+use anchor_spl::token::{ Mint, Token, TokenAccount, Approve, self, FreezeAccount };
+use mpl_token_metadata::instruction::freeze_delegated_account;
 
 #[derive(Accounts)]
 pub struct LockToken<'info> {
@@ -16,6 +22,7 @@ pub struct LockToken<'info> {
 
     // vault
     #[account(
+        mut,
         seeds = [VAULT_AUTHORITY_SEED.as_ref()],
         bump
     )]
@@ -49,25 +56,60 @@ pub struct LockToken<'info> {
     pub token_mint: Box<Account<'info, Mint>>,
     
     pub system_program: Program<'info, System>,
+    // #[account(
+    //     mut,
+    //     constraint = mint_metadata.owner == &metaplex_token_metadata::ID
+    // )]
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    pub mint_metadata: AccountInfo<'info>,
     pub token_program: Program<'info, Token>,
+    /// CHECK intstruction will fail if wrong program is supplied
+    pub token_mint_edition: AccountInfo<'info>,
+
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    #[account(constraint = token_metadata_program.key == &metaplex_token_metadata::ID)]
+    pub token_metadata_program: AccountInfo<'info>,
 } 
 
 impl LockToken<'_> {
     pub fn lock_token_handler(ctx: Context<Self>, amount: u64) -> Result<()> {
+
+        msg!("Metadata Account: {:?}", ctx.accounts.mint_metadata.key());
+
         let user_pool = &mut ctx.accounts.user_pool;
-        let user = ctx.accounts.user.key();
-        //  --------------------------- transfer SPL token to loyalty ata   ---------------------------------------
-         msg!("before transfer ====>{}", user_pool.total_token_staked);
-         msg!("before date ====>{}", user_pool.stake_token_date);
-        token_transfer_user(
-            ctx.accounts.token_account.to_account_info(),      //from
-            ctx.accounts.user.to_account_info(),            //authority
-            ctx.accounts.elmnt_vault.to_account_info(),   //to
+        let user_escrow = ctx.accounts.token_account.key();
+        msg!("before transfer ====>{}", user_pool.total_token_staked);
+        msg!("before date ====>{}", user_pool.stake_token_date);
+        msg!("authority ====>{}", ctx.accounts.user.key());
+        let cpi_accounts = Approve {
+            to: ctx.accounts.token_account.to_account_info(),
+            delegate: ctx.accounts.vault.to_account_info(),
+            authority: ctx.accounts.user.to_account_info(),
+        };
+        msg!("step2");
+
+        let cpi_program = ctx.accounts.token_program.to_account_info();
+        let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+        token::approve(cpi_context, amount)?;
+        msg!("step3");
+        let _vault_bump = *ctx.bumps.get("vault").unwrap();
+
+        let seeds = &[
+            VAULT_AUTHORITY_SEED.as_bytes(),
+            &[_vault_bump],
+        ];
+        let delegate_seeds = &[&seeds[..]];
+        let cpi_context = CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
-            amount
-        )?;
-        //  ----------------------------       update global info    -------------------------------
-        
+            FreezeAccount {
+                account: ctx.accounts.token_account.to_account_info(),
+                mint: ctx.accounts.token_mint.to_account_info(),
+                authority: ctx.accounts.vault.to_account_info(),
+            },
+            delegate_seeds
+        );
+        token::freeze_account(cpi_context)?;
+
         let global_pool = &mut ctx.accounts.global_pool;
         
         global_pool.total_token_staked += amount;

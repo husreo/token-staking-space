@@ -67,7 +67,7 @@ export type SolTokenStaking = {
         },
         {
           "name": "vault",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK instruction will fail if wrong edition is supplied"
@@ -104,7 +104,25 @@ export type SolTokenStaking = {
           "isSigner": false
         },
         {
+          "name": "mintMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMintEdition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -166,6 +184,30 @@ export type SolTokenStaking = {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "tokenMintEdition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "mintMetadata",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK instruction will fail if wrong metadata is supplied"
+          ]
         }
       ],
       "args": []
@@ -545,7 +587,7 @@ export type SolTokenStaking = {
     },
     {
       "code": 6003,
-      "name": "InvalidMetadata",
+      "name": "InvaliedMetadata",
       "msg": "Metadata address is invalid"
     },
     {
@@ -645,7 +687,7 @@ export const IDL: SolTokenStaking = {
         },
         {
           "name": "vault",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "CHECK instruction will fail if wrong edition is supplied"
@@ -682,7 +724,25 @@ export const IDL: SolTokenStaking = {
           "isSigner": false
         },
         {
+          "name": "mintMetadata",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMintEdition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -744,6 +804,30 @@ export const IDL: SolTokenStaking = {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "tokenMintEdition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK intstruction will fail if wrong program is supplied"
+          ]
+        },
+        {
+          "name": "mintMetadata",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK instruction will fail if wrong metadata is supplied"
+          ]
         }
       ],
       "args": []
@@ -1123,7 +1207,7 @@ export const IDL: SolTokenStaking = {
     },
     {
       "code": 6003,
-      "name": "InvalidMetadata",
+      "name": "InvaliedMetadata",
       "msg": "Metadata address is invalid"
     },
     {

@@ -184,25 +184,7 @@ function programCommand(name: string) {
         .command(name)
         .option('-e, --env <string>', 'Solana cluster env name', 'devnet') //mainnet-beta, testnet, devnet
         .option('-r, --rpc <string>', 'Solana cluster RPC name', 'https://api.devnet.solana.com')
-        .option('-k, --keypair <string>', 'Solana wallet Keypair Path', './id.json')
+        .option('-k, --keypair <string>', 'Solana wallet Keypair Path', './key.json')
 }
 
 program.parse(process.argv);
-
-/*
-
-yarn script init
-
-yarn script init-user -k ../key/dc8.json
-
-yarn script lock -m 3xVwPory1mcY5TmpmCtPC2ezgpHuzLeMLbdGY1DeQLxY -k ../key/dc8.json
-
-yarn script unlock -m 3xVwPory1mcY5TmpmCtPC2ezgpHuzLeMLbdGY1DeQLxY -k ../key/dc8.json
-
-yarn script claim -k ../key/dc8.json
-
-yarn script user-status -a EwUTcnP6nu3rckUCWVut4bu82k8bGuZ1DGnpQt5VsU7m
-
-yarn script status
-
-*/
